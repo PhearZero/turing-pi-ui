@@ -1,0 +1,31 @@
+server {
+    listen       80;
+    listen  [::]:80;
+    server_name  localhost;
+    gzip on;
+    location / {
+        try_files $uri $uri/ $uri.html =404;
+        root   /usr/share/nginx/html;
+        index  index.html index.htm;
+    }
+
+    #error_page   404 500 502 503 504  /error.html;
+
+    location /auth/bmc {
+        auth_basic "BMC Admin";
+        auth_basic_user_file /etc/nginx/.htpasswd;
+        proxy_pass   ${BMC_API};
+        proxy_hide_header Content-Type;
+        add_header Content-Type application/json;
+        add_header Access-Control-Allow-Credentials true;
+        add_header Access-Control-Allow-Origin http://localhost:5173;
+        add_header BMC-Origin ${BMC_API};
+    }
+    location /api/bmc {
+        proxy_pass   ${BMC_API};
+        proxy_hide_header Content-Type;
+        add_header Content-Type application/json;
+        add_header Access-Control-Allow-Origin *;
+        add_header BMC-Origin ${BMC_API};
+    }
+}

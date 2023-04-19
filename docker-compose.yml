@@ -1,0 +1,12 @@
+version: '3'
+services:
+  proxy:
+    image: nginx:latest
+    ports:
+      - "8080:80"
+    environment:
+      - BMC_API="http://192.168.1.21/api/bmc"
+    volumes:
+      - ./.nginx/templates:/etc/nginx/templates
+      - ./.nginx/.htpasswd:/etc/nginx/.htpasswd
+      - ./build:/usr/share/nginx/html
