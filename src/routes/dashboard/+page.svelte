@@ -1,91 +1,45 @@
 <script>
-    import {server} from '../../stores/servers'
+    import Nodes from "$lib/bmc/Nodes.svelte";
+    import {watch} from "../../stores/servers"
 
-    let error
-    let nodeinfo
-    let usb
-    let power
-
-    const getNodeinfo = () => {
-        const data = new URLSearchParams();
-        data.set('opt', 'get')
-        data.set('type', 'nodeinfo')
-        let options = $server.toString().match('auth') ? {credentials: "include"} : {}
-        fetch(`${$server}?${data}`, options)
-            .then(r => r.json())
-            .then(d => {
-                console.log(d)
-                nodeinfo = d;
-            })
-            .catch(e => {
-                console.log({wow: e})
-                error = e
-            })
+    const onWatchClicked = () => {
+        $watch = !$watch;
     }
-    const getUsb = () => {
-        const data = new URLSearchParams();
-        data.set('opt', 'get')
-        data.set('type', 'usb')
-        let options = $server.toString().match('auth') ? {credentials: "include"} : {}
-        fetch(`${$server}?${data}`, options)
-            .then(r => r.json())
-            .then(d => {
-                console.log(d)
-                usb = d;
-            })
-            .catch(e => {
-                console.log({wow: e})
-                error = e
-            })
-    }
-    const getPower = () => {
-        const data = new URLSearchParams();
-        data.set('opt', 'get')
-        data.set('type', 'power')
-        let options = $server.toString().match('auth') ? {credentials: "include"} : {}
-        fetch(`${$server}?${data}`, options)
-            .then(r => r.json())
-            .then(d => {
-                console.log(d)
-                power = d;
-            })
-            .catch(e => {
-                console.log({wow: e})
-                error = e
-            })
-    }
-    getNodeinfo()
-    getUsb()
-    getPower()
 </script>
 
 <article>
-    <header>
-        <h2>Dashboard</h2>
+    <header class="row">
+        <hgroup class="col-8">
+            <h1>Dashboard</h1>
+            <h2>Settings from the Baseboard Management Controller</h2>
+        </hgroup>
+        <div class="col-4 watch-bmc">
+<!--        <label for="watch" class="col-4 watch-bmc">-->
+            <button on:click={onWatchClicked} class={!$watch ? "success" : "error"}>
+                {$watch? "Stop Watching" : "Start Watching"}
+            </button>
+<!--            <input type="checkbox" role="switch" id="watch" bind:checked={watch}/>-->
+<!--        </label>-->
+        </div>
     </header>
-    <div class="grid">
+    <Nodes/>
     <article>
         <header>
-            <h3>Node Info</h3>
+            <h3>USB Mode</h3>
         </header>
-        {JSON.stringify(nodeinfo)}
+        <form>
+            <select disabled></select>
+        </form>
     </article>
-    <article>
-        <header>
-            <h3>USB</h3>
-        </header>
-        {JSON.stringify(usb)}
-    </article>
-    <article>
-        <header>
-            <h3>Power</h3>
-        </header>
-        {JSON.stringify(power)}
-    </article>
-    </div>
 </article>
 
 <style>
+    .watch-bmc {
+        display: flex;
+        align-content: center;
+        flex-wrap: wrap;
+        justify-content: end;
+    }
     h3, h2{
         margin-bottom: 0px;
     }

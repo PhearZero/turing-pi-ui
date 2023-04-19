@@ -1,5 +1,6 @@
 <script>
     import './styles.css'
+    import './pico-bootstrap-grid.css'
     import Navigation from "../lib/Navigation.svelte";
     import Footer from "../lib/Footer.svelte";
 </script>

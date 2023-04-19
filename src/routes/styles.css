@@ -1,3 +1,20 @@
+.icon-button {
+    border-radius: 100px;
+    height: 45px;
+    width: 45px;
+    padding: 0px;
+    /*padding: 8px 0 0 0;*/
+}
+
+.success {
+    border-color: var(--ins-color);
+    background-color: var(--ins-color);
+}
+
+.error {
+    border-color: var(--del-color);
+    background-color: var(--del-color);
+}
 /*!* Grid *!*/
 /*#app>main {*/
 /*    display: flex;*/
