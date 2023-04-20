@@ -1,5 +1,8 @@
 import {server, watch} from './servers'
 import {writable, get} from "svelte/store";
+import {tpi} from 'turing-pi-js'
+
+let client = tpi(get(server))
 
 interface Node {
     power: boolean
@@ -11,6 +14,7 @@ interface Node {
 interface Nodes {
     [k: string]: Node
 }
+
 export const nodes = writable<Nodes>({
     node1: {
         power: false,
@@ -39,25 +43,25 @@ export const nodes = writable<Nodes>({
 })
 
 const mergeData = (d: any, type: string) => {
-    nodes.update((value)=>{
-        if(type === 'info'){
-            Object.keys(d).forEach(n=>{
+    nodes.update((value) => {
+        if (type === 'info') {
+            Object.keys(d).forEach(n => {
                 value[n] = {
                     ...value[n],
                     info: d[n],
                 }
             })
         }
-        if(type === 'power'){
-            Object.keys(d).forEach(n=>{
+        if (type === 'power') {
+            Object.keys(d).forEach(n => {
                 value[n] = {
                     ...value[n],
                     power: d[n] !== 0,
                 }
             })
         }
-        if(type === 'usb'){
-            Object.keys(value).forEach(n=>{
+        if (type === 'usb') {
+            Object.keys(value).forEach(n => {
                 value[n] = {
                     ...value[n],
                     usb: n.match(d.node + 1) !== null,
@@ -68,47 +72,21 @@ const mergeData = (d: any, type: string) => {
     })
 
 }
-const getNodeinfo = () => {
-    const data = new URLSearchParams();
-    data.set('opt', 'get')
-    data.set('type', 'nodeinfo')
-
-    const options = get(server).toString().match('auth') ? {credentials: "include"} as RequestInit : undefined
-    fetch(`${get(server)}?${data}`, options)
-        .then(r => r.json())
-        .then(d => {
-            mergeData(d.response[0], 'info')
-        })
-}
-const getUsb = () => {
-    const data = new URLSearchParams();
-    data.set('opt', 'get')
-    data.set('type', 'usb')
-    const options = get(server).toString().match('auth') ? {credentials: "include"} as RequestInit : undefined
-    fetch(`${get(server)}?${data}`, options)
-        .then(r => r.json())
-        .then(d => {
-            mergeData(d.response[0], "usb")
-        })
-}
-
-const getPower = () => {
-    const data = new URLSearchParams();
-    data.set('opt', 'get')
-    data.set('type', 'power')
-    const options = get(server).toString().match('auth') ? {credentials: "include"} as RequestInit : undefined
-    fetch(`${get(server)}?${data}`, options)
-        .then(r => r.json())
-        .then(d => {
-            mergeData(d.response[0], 'power')
-        })
-}
 
 const update = () => {
     console.log(`Running update ${new Date()}`)
-    getNodeinfo()
-    getUsb()
-    getPower()
+    client.get('nodeinfo')
+        .then(d => {
+            mergeData(d.response[0], 'info')
+        })
+    client.get('power')
+        .then(d => {
+            mergeData(d.response[0], 'power')
+        })
+    client.get('usb')
+        .then(d => {
+            mergeData(d.response[0], "usb")
+        })
 
 }
 
@@ -117,22 +95,23 @@ let interval: unknown
 
 // Anytime the store changes, update the local storage value.
 server.subscribe((value) => {
+    client = tpi(value)
     update()
-    if(typeof interval !== 'undefined'){
+    if (typeof interval !== 'undefined') {
         clearInterval(interval as number)
         interval = undefined
     }
 
-    if(get(watch)){
+    if (get(watch)) {
         interval = setInterval(update, 10000)
     }
 })
 watch.subscribe((value) => {
-    if(typeof interval !== 'undefined'){
+    if (typeof interval !== 'undefined') {
         clearInterval(interval as number)
         interval = undefined
     }
-    if(value){
+    if (value) {
         interval = setInterval(update, 10000)
     }
 })
