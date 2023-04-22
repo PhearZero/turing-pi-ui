@@ -1,8 +1,7 @@
-import {server, watch} from './servers'
+import {server, watch} from './server'
 import {writable, get} from "svelte/store";
-import {tpi} from 'turing-pi-js'
 
-let client = tpi(get(server))
+let client = get(server).client
 
 interface Node {
     power: boolean
@@ -95,7 +94,7 @@ let interval: unknown
 
 // Anytime the store changes, update the local storage value.
 server.subscribe((value) => {
-    client = tpi(value)
+    client = value.client
     update()
     if (typeof interval !== 'undefined') {
         clearInterval(interval as number)
@@ -103,7 +102,7 @@ server.subscribe((value) => {
     }
 
     if (get(watch)) {
-        interval = setInterval(update, 10000)
+        interval = setInterval(update, 1000)
     }
 })
 watch.subscribe((value) => {

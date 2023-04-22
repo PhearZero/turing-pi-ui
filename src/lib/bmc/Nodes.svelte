@@ -1,6 +1,6 @@
 <script>
-    import {server, watch} from '../../stores/servers'
-    import {nodes} from '../../stores/nodes'
+    import {server, watch} from '$lib/stores/server'
+    import {nodes} from '$lib/stores/nodes'
     let error
 </script>
 <article>
@@ -10,10 +10,10 @@
             <h2>Configure your compute nodes</h2>
         </hgroup>
     </header>
+    <figure>
     <table>
         <thead>
         <tr>
-            <th scope="col">#</th>
             <th scope="col">Name</th>
             <th scope="col">Info</th>
             <th scope="col">USB 2.0</th>
@@ -23,7 +23,6 @@
         <tbody>
         {#each Object.keys($nodes) as nodeName, i}
             <tr>
-                <th scope="row">{i+1}</th>
                 <td>{$nodes[nodeName].name}</td>
                 <td>{$nodes[nodeName].info}</td>
                 <td>
@@ -40,6 +39,7 @@
         {/each}
         </tbody>
     </table>
+    </figure>
     <footer>
         {#if !$watch}
             <button disabled>Save</button>
@@ -48,17 +48,10 @@
     </footer>
 </article>
 <style>
-    .node-header-col, .node-header-col>h3 {
-        margin: 0px;
-        padding: 0px;
+    hgroup, header, figure {
+        margin-bottom: 0;
     }
-    .node-power-col {
-        overflow: hidden;
+    footer {
+        margin-top: 0;
     }
-    .icon-button {
-        float: right;
-    }
-    /*header {*/
-    /*    margin-bottom: 0px;*/
-    /*}*/
 </style>

@@ -1,15 +1,25 @@
 <script>
-    import {servers, server} from '../stores/servers'
-    import AddServer from "./bmc/AddServer.svelte";
-    let showServerPanel = false
-    const handleAddServer = () => {
-        showServerPanel=true
-    }
+    import { onMount } from 'svelte';
+    import {server} from '$lib/stores/server'
+    import {themeSwitcher} from '$lib/theme-switcher'
+
+    onMount(()=>{
+        themeSwitcher.init()
+    })
 </script>
 <nav class="container-fluid">
     <ul>
         <li>
-            <a href="./" class="contrast" onclick="event.preventDefault()"><strong>Turing Pi 2</strong></a> @ <a>{new URL($server).host}</a>
+            <a href="./" class="contrast" onclick="event.preventDefault()"><strong>Turing Pi 2</strong></a> @ <a>
+            {$server.url.host}
+        </a>
+        </li>
+        <li>
+            {#await server.init()}
+               vX.X.X
+            {:then value}
+                v{$server.version}
+            {/await}
         </li>
     </ul>
     <ul>
@@ -23,17 +33,5 @@
                 </ul>
             </details>
         </li>
-        <li>
-            <details role="list" dir="rtl">
-                <summary aria-haspopup="listbox" role="link" class="secondary">Baseboards</summary>
-                <ul role="listbox">
-                    {#each $servers as server}
-                        <li><a href="../v1-preview/">{server.host}</a></li>
-                    {/each}
-                    <li><button on:click={handleAddServer}>Add Server</button></li>
-                </ul>
-            </details>
-        </li>
     </ul>
-    <AddServer bind:open={showServerPanel}/>
 </nav>

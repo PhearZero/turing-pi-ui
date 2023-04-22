@@ -1,13 +1,6 @@
-/*!
- * Minimal theme switcher
- *
- * Pico.css - https://picocss.com
- * Copyright 2019-2023 - Licensed under MIT
- */
-
-const themeSwitcher = {
+export const themeSwitcher = {
     // Config
-    _scheme: "auto",
+    _scheme: "auto" as string | null,
     menuTarget: "details[role='list']",
     buttonsTarget: "a[data-theme-switcher]",
     buttonAttribute: "data-theme-switcher",
@@ -16,7 +9,6 @@ const themeSwitcher = {
 
     // Init
     init() {
-        console.log('Hello')
         this.scheme = this.schemeFromLocalStorage;
         this.initSwitchers();
     },
@@ -38,20 +30,7 @@ const themeSwitcher = {
 
     // Init switchers
     async initSwitchers() {
-        let buttons = document.querySelectorAll(this.buttonsTarget);
-        if(buttons.length === 0) {
-          buttons = await new Promise((resolve,reject)=>{
-              setTimeout(()=>{
-                  const btns = document.querySelectorAll(this.buttonsTarget);
-                  if(btns.length === 0){
-                      reject(new Error('No buttons found'))
-                  } else {
-                      resolve(btns)
-                  }
-              }, 3000)
-          })
-        }
-        console.log(buttons)
+        const buttons = document.querySelectorAll(this.buttonsTarget)
         buttons.forEach((button) => {
             button.addEventListener(
                 "click",
@@ -60,7 +39,10 @@ const themeSwitcher = {
                     // Set scheme
                     this.scheme = button.getAttribute(this.buttonAttribute);
                     // Close dropdown
-                    document.querySelector(this.menuTarget).removeAttribute("open");
+                    const dd = document.querySelector(this.menuTarget)
+                    if(dd){
+                        dd.removeAttribute("open");
+                    }
                 },
                 false
             );
@@ -85,16 +67,17 @@ const themeSwitcher = {
 
     // Apply scheme
     applyScheme() {
-        document.querySelector("html").setAttribute(this.rootAttribute, this.scheme);
+        const html = document.querySelector("html")
+            if(html && this.scheme){
+                html.setAttribute(this.rootAttribute, this.scheme);
+            }
+
     },
 
     // Store scheme to local storage
     schemeToLocalStorage() {
-        if (typeof window.localStorage !== "undefined") {
+        if (typeof window.localStorage !== "undefined" && this.scheme) {
             window.localStorage.setItem(this.localStorageKey, this.scheme);
         }
     },
 };
-
-// Init
-themeSwitcher.init();
