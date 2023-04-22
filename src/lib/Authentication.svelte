@@ -1,13 +1,14 @@
 <script>
-    import {server, servers} from '../stores/servers'
-    import AddServer from "$lib/bmc/AddServer.svelte";
-
+    import {servers, urls} from '$lib/stores/refactor/servers'
+    // import {server, servers} from '$lib/stores/servers'
+    import AddServer from "$lib/bmc/modal/AddServer.svelte";
     let advanced = false
     let open = false
     let error
+
     const checkCredentials = (redirect) => {
-        let options = $server.toString().match('auth') ? {credentials: "include",} : {}
-        fetch($server, options)
+        let options = $urls[0].toString().match('auth') ? {credentials: "include",} : {}
+        fetch($urls[0], options)
             .then(r => r.json())
             .then(d => {
                 error = undefined
@@ -21,7 +22,7 @@
                 advanced = true
             })
     }
-    checkCredentials()
+    // checkCredentials()
 
     const handleAddServer = (e) => {
         e.preventDefault()
@@ -79,15 +80,15 @@
                 Advanced Settings
             </label>
         </fieldset>
-        {#if advanced}
+        {#if advanced && $servers.length !== 0}
             <label for="server_url">
                 Server URL
-                <select id="server_url" bind:value={$server} on:change={checkCredentials} aria-errormessage="err1"
+                <select id="server_url" bind:value={$servers[0].url} on:change={checkCredentials} aria-errormessage="err1"
                         aria-invalid={typeof error !== 'undefined' ? true : false}>
-                    <option value={$server} selected>{$server}</option>
+                    <option value={$servers[0].url} selected>{$servers[0].url}</option>
                     {#each $servers as s, i}
-                        {#if $server.toString() !== s.toString()}
-                            <option value={s}>{s}</option>
+                        {#if $servers[0].url.toString() !== s.url.toString()}
+                            <option value={s.url}>{s.url}</option>
                         {/if}
                     {/each}
                 </select>

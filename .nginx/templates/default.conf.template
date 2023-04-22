@@ -28,4 +28,18 @@ server {
         add_header Access-Control-Allow-Origin *;
         add_header BMC-Origin ${BMC_API};
     }
+     location /api2/bmc {
+        proxy_pass   ${BMC_API};
+        proxy_hide_header Content-Type;
+        add_header Content-Type application/json;
+        add_header Access-Control-Allow-Origin *;
+        add_header BMC-Origin ${BMC_API};
+    }
+     location /api3/bmc {
+        proxy_pass   ${BMC_API};
+        proxy_hide_header Content-Type;
+        add_header Content-Type application/json;
+        add_header Access-Control-Allow-Origin *;
+        add_header BMC-Origin ${BMC_API};
+    }
 }

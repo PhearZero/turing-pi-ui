@@ -1,19 +1,18 @@
 <script>
-    import {server, watch} from '../../stores/servers'
-    import {nodes} from '../../stores/nodes'
-    let error
+    import {watch} from '$lib/stores/servers'
+    import {nodes} from '$lib/stores/nodes'
 </script>
 <article>
     <header>
         <hgroup>
-            <h1>Nodes</h1>
-            <h2>Configure your compute nodes</h2>
+            <h5>Nodes</h5>
+            <h6>Configure your compute nodes</h6>
         </hgroup>
     </header>
+    <figure>
     <table>
         <thead>
         <tr>
-            <th scope="col">#</th>
             <th scope="col">Name</th>
             <th scope="col">Info</th>
             <th scope="col">USB 2.0</th>
@@ -23,7 +22,6 @@
         <tbody>
         {#each Object.keys($nodes) as nodeName, i}
             <tr>
-                <th scope="row">{i+1}</th>
                 <td>{$nodes[nodeName].name}</td>
                 <td>{$nodes[nodeName].info}</td>
                 <td>
@@ -40,6 +38,7 @@
         {/each}
         </tbody>
     </table>
+    </figure>
     <footer>
         {#if !$watch}
             <button disabled>Save</button>
@@ -48,17 +47,8 @@
     </footer>
 </article>
 <style>
-    .node-header-col, .node-header-col>h3 {
-        margin: 0px;
-        padding: 0px;
+    td, th {
+        word-wrap: break-word;
+        /*max-width: 150px;*/
     }
-    .node-power-col {
-        overflow: hidden;
-    }
-    .icon-button {
-        float: right;
-    }
-    /*header {*/
-    /*    margin-bottom: 0px;*/
-    /*}*/
 </style>

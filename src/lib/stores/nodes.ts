@@ -1,8 +1,7 @@
-import {server, watch} from './servers'
+import {server, watch} from '$lib/stores/servers'
 import {writable, get} from "svelte/store";
 import {tpi} from 'turing-pi-js'
-
-let client = tpi(get(server))
+let client = tpi(get(server).url)
 
 interface Node {
     power: boolean
@@ -15,6 +14,7 @@ interface Nodes {
     [k: string]: Node
 }
 
+// TODO: inject server state
 export const nodes = writable<Nodes>({
     node1: {
         power: false,
@@ -42,12 +42,13 @@ export const nodes = writable<Nodes>({
     }
 })
 
-const mergeData = (d: any, type: string) => {
+const mergeData = (d: any, type: string, server) => {
     nodes.update((value) => {
-        if (type === 'info') {
+        if (type === 'nodeinfo') {
             Object.keys(d).forEach(n => {
                 value[n] = {
                     ...value[n],
+                    name: `${value[n].name}@${server.ip}`,
                     info: d[n],
                 }
             })
@@ -68,26 +69,22 @@ const mergeData = (d: any, type: string) => {
                 }
             })
         }
+
         return value
     })
 
 }
 
-const update = () => {
-    console.log(`Running update ${new Date()}`)
-    client.get('nodeinfo')
-        .then(d => {
-            mergeData(d.response[0], 'info')
-        })
-    client.get('power')
-        .then(d => {
-            mergeData(d.response[0], 'power')
-        })
-    client.get('usb')
-        .then(d => {
-            mergeData(d.response[0], "usb")
-        })
+const update = (server) => {
+    const keys = ['nodeinfo', 'power', 'usb']
 
+    keys.map((k)=>{
+        client.get(k as 'nodeinfo'| 'power' | 'usb')
+            .then(d=>{
+                mergeData(d.response[0], k, server)
+            })
+    })
+    console.log(`Running update ${new Date()}`)
 }
 
 
@@ -95,8 +92,12 @@ let interval: unknown
 
 // Anytime the store changes, update the local storage value.
 server.subscribe((value) => {
-    client = tpi(value)
-    update()
+    console.log(value)
+    client = value.client
+    if(typeof value.ip !== 'undefined'){
+        update(value)
+    }
+
     if (typeof interval !== 'undefined') {
         clearInterval(interval as number)
         interval = undefined

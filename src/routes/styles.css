@@ -1,3 +1,30 @@
+html, body {
+    width: 100vw;
+    height: 100vh;
+    max-width: 100vw;
+    overflow-x: hidden;
+}
+hgroup {
+    margin: 0 !important;
+}
+/* width */
+/*::-webkit-scrollbar {*/
+/*    width: 20px;*/
+/*}*/
+
+/* Track */
+::-webkit-scrollbar-track {
+    background-color: transparent !important;
+    /*box-shadow: inset 0 0 5px grey;*/
+    /*border-radius: 10px;*/
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #d6dee1;
+    border-radius: 20px;
+    border: 6px solid transparent;
+    background-clip: content-box;
+}
 .icon-button {
     border-radius: 100px;
     height: 45px;

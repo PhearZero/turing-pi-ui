@@ -1,14 +1,18 @@
 <script>
+
     import Nodes from "$lib/bmc/Nodes.svelte";
-    import {watch} from "../../stores/servers"
+    import {watch, servers} from "$lib/stores/servers"
+    import Servers from "$lib/bmc/Servers.svelte";
 
     const onWatchClicked = () => {
         $watch = !$watch;
     }
+
 </script>
 
 <article>
-    <header class="row">
+    <header>
+        <div class="row">
         <hgroup class="col-8">
             <h1>Dashboard</h1>
             <h2>Settings from the Baseboard Management Controller</h2>
@@ -21,8 +25,11 @@
 <!--            <input type="checkbox" role="switch" id="watch" bind:checked={watch}/>-->
 <!--        </label>-->
         </div>
+        </div>
     </header>
+
     <Nodes/>
+    <Servers/>
     <article>
         <header>
             <h3>USB Mode</h3>
@@ -34,6 +41,9 @@
 </article>
 
 <style>
+    article {
+        margin: 0;
+    }
     .watch-bmc {
         display: flex;
         align-content: center;
@@ -41,6 +51,6 @@
         justify-content: end;
     }
     h3, h2{
-        margin-bottom: 0px;
+        margin-bottom: 0;
     }
 </style>
