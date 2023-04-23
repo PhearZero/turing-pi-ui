@@ -11,7 +11,8 @@ fi
 # Build application and create tar
 mv .env .env-disabled
 mv .env-production .env
-npm run build
+[ ! -d "./node_modules" ] && npm install > deploy.install.log
+npm run build > deploy.build.log
 rm ./build/index.html
 mv ./build/index.asp.html ./build/index.asp
 tar cvf build.tar ./build/
