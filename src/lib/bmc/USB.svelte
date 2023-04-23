@@ -1,6 +1,5 @@
 <script>
     import {server} from '$lib/stores/server'
-    import {nodes} from "$lib/stores/nodes";
     let loading
     let error
     const setUSB = (mode) => {
@@ -14,15 +13,15 @@
     }
     const handleUsbChange = async (e) => {
         loading = true
-        console.log(e.target.value, $server.usb)
         $server.client.set('usb', {mode: e.target.value, node: $server.usb.node}, {mode: "no-cors"})
             .then(() => {
-                setUSB(e.target.id)
+                setUSB(parseInt(e.target.value))
                 loading = false
             })
             .catch(e => {
                 error = e
                 setUSB($server.usb.mode)
+                loading = false
             })
     }
 </script>
@@ -38,14 +37,12 @@
                 <h5>Set USB to host or device</h5>
             </hgroup>
         </header>
-        <form>
             {#if typeof $server.usb !== 'undefined'}
             <select on:change={handleUsbChange} id="usb" required bind:value={$server.usb.mode}>
                 <option value={0}>Host</option>
                 <option value={1}>Device</option>
             </select>
             {/if}
-        </form>
         <footer>
         </footer>
     </article>

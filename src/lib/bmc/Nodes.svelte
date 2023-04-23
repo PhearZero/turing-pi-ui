@@ -33,7 +33,8 @@
         }
         $server.client.set('usb', {mode: $server.usb.mode, node: nodeMap[e.target.name]}, {mode: "no-cors"})
             .then(() => {
-                // TODO: Fix response for POST
+                setUSB(nodeMap[e.target.name])
+                loading = false
             })
             .catch(_error => {
                 if(_error.name === 'SyntaxError'){
