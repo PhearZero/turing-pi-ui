@@ -10,6 +10,11 @@ interface USB {
     mode: 0|1
     node: number
 }
+interface SDCard {
+    total: number| string
+    free: number | string
+    use: number | string
+}
 interface Server {
     url: URL
     version?: string
@@ -17,6 +22,7 @@ interface Server {
     ip?: string
     mac?: string
     usb?: USB
+    sdcard? : SDCard
     client: any
 }
 
@@ -38,8 +44,10 @@ function createServerStore(){
                 initalized = true
                 const {response} = await client.get('other')
                 const usb = await client.get('usb')
+                const sdcard = await client.get('sdcard')
                 _server.set({
                     usb: usb.response[0] as USB,
+                    sdcard: sdcard.response[0] as SDCard,
                     url: DEFAULT_SERVER,
                     client,
                     ...response[0] as Other
