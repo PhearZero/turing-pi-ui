@@ -49,6 +49,29 @@
 
             </header>
         </article>
+        {:else}
+        <article class="sdcard">
+            <header class="upload-header">
+                <hgroup>
+                    <h5>SD Card</h5>
+                    <h6>Storage Information</h6>
+                </hgroup>
+
+                <label>
+                    Total
+                    <input readonly value="0"/>
+                </label>
+                <label>
+                    Free
+                    <input readonly value="0"/>
+                </label>
+                <label>
+                    Used
+                    <input readonly value="0"/>
+                </label>
+
+            </header>
+        </article>
     {/if}
     <article class="upload-card">
         <header class="upload-header">

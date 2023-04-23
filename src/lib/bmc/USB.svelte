@@ -1,5 +1,6 @@
 <script>
     import {server} from '$lib/stores/server'
+
     let loading
     let error
     const setUSB = (mode) => {
@@ -33,16 +34,21 @@
     <article>
         <header>
             <hgroup>
-            <h4>USB Mode</h4>
+                <h4>USB Mode</h4>
                 <h5>Set USB to host or device</h5>
             </hgroup>
         </header>
-            {#if typeof $server.usb !== 'undefined'}
+        {#if typeof $server.usb !== 'undefined'}
             <select on:change={handleUsbChange} id="usb" required bind:value={$server.usb.mode}>
                 <option value={0}>Host</option>
                 <option value={1}>Device</option>
             </select>
-            {/if}
+        {:else }
+            <select id="usb-preview">
+                <option value={0}>Host</option>
+                <option value={1}>Device</option>
+            </select>
+        {/if}
         <footer>
         </footer>
     </article>
@@ -55,6 +61,7 @@
     hgroup, form {
         margin-bottom: 0;
     }
+
     article {
         /*margin: 0*/
     }
