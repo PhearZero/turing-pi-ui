@@ -84,6 +84,11 @@
                                     bind:value={nodeName}
                                     checked={$server.usb.node === i}
                             />
+                            {:else }
+                            <input
+                                    type="radio"
+                                    name="usb"
+                            />
                         {/if}
 
 
