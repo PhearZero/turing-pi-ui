@@ -26,7 +26,6 @@ cp .env-production .env
 npm run build &> deploy.build.log
 rm ./build/index.html
 mv ./build/index.asp.html ./build/index.asp
-tar cf build.tar ./build/
 
 echo
 
@@ -46,5 +45,4 @@ ssh "$1" "[ -d /mnt/var/www ] && [ -d /mnt/sdcard ] && tar cf /mnt/sdcard/www-$n
 echo
 
 echo "Cleaning up..."
-rm ./build.tar
 [ -f ".env-disabled" ] && mv .env-disabled .env
