@@ -16,6 +16,7 @@ library, an API client for a Turing Pi 2 BMC.
  - [X] Power Management
  - [X] USB Management
  - [X] BMC Host Information
+ - [ ] BMC SD Card Information
  - [X] Node Information
  - [ ] Allow firmware uploads 
 
