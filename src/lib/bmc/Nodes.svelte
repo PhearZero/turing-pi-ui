@@ -1,7 +1,56 @@
 <script>
-    import {server, watch} from '$lib/stores/server'
+    import {server} from '$lib/stores/server'
     import {nodes} from '$lib/stores/nodes'
+
+    let loading
     let error
+    const setUSB = (id) => {
+        let _nodes = $nodes
+        console.log(_nodes)
+        Object.keys(_nodes).forEach((n, i)=>{
+            _nodes[n] = {
+                ..._nodes[n],
+                usb: i === id,
+            }
+        })
+        server.set({
+            ...$server,
+            usb: {
+                ...$server.usb,
+                node: id,
+            }
+        })
+        nodes.set(_nodes)
+    }
+    const handleUsbChange = async (e) => {
+        loading = true
+        // get the previous state, in case of it changing or to revert to it during failure
+        const nodeMap = {
+            "node1": 0,
+            "node2": 1,
+            "node3": 2,
+            "node4": 3,
+        }
+        $server.client.set('usb', {mode: $server.usb.mode, node: nodeMap[e.target.name]}, {mode: "no-cors"})
+            .then(() => {
+                // TODO: Fix response for POST
+            })
+            .catch(_error => {
+                if(_error.name === 'SyntaxError'){
+                    error = _error
+                }
+                setUSB(
+                    _error.name === 'SyntaxError' ? nodeMap[e.target.name] : $server.usb.node
+                )
+                loading = false
+            })
+    }
+    const handlePowerChange = (e) =>{
+        loading = true
+        $server.client.set('power', {[e.target.name]: e.target.checked ? 1:0}, {mode: "no-cors"}).catch((_error)=>{
+            console.log(_error)
+        })
+    }
 </script>
 <article>
     <header>
@@ -11,46 +60,56 @@
         </hgroup>
     </header>
     <figure>
-    <table>
-        <thead>
-        <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Info</th>
-            <th scope="col">USB 2.0</th>
-            <th scope="col">Power</th>
-        </tr>
-        </thead>
-        <tbody>
-        {#each Object.keys($nodes) as nodeName, i}
+        <table>
+            <thead>
             <tr>
-                <td>{$nodes[nodeName].name}</td>
-                <td>{$nodes[nodeName].info}</td>
-                <td>
-
-                            <input disabled type="checkbox" role="switch" id={`${$nodes[nodeName].usb}-i`} bind:checked={$nodes[nodeName].usb}/>
-
-                </td>
-                <td>
-
-                        <input disabled type="checkbox" role="switch" id={`${$nodes[nodeName].power}-i`} bind:checked={$nodes[nodeName].power}/>
-
-                </td>
+                <th scope="col">Name</th>
+                <th scope="col">Info</th>
+                <th scope="col">USB 2.0</th>
+                <th scope="col">Power</th>
             </tr>
-        {/each}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            {#each Object.keys($nodes) as nodeName, i}
+                <tr>
+                    <td>{$nodes[nodeName].name}</td>
+                    <td>{$nodes[nodeName].info}</td>
+                    <td>
+
+                        <input
+                                on:change={handleUsbChange}
+                                disabled={$nodes[nodeName].usb}
+                                type="checkbox"
+                                role="switch"
+                                name={nodeName}
+                                bind:checked={$nodes[nodeName].usb}
+                        />
+
+                    </td>
+                    <td>
+
+                        <input
+                                on:change={handlePowerChange}
+                                type="checkbox"
+                                role="switch"
+                                name={nodeName}
+                               bind:checked={$nodes[nodeName].power}
+                        />
+
+                    </td>
+                </tr>
+            {/each}
+            </tbody>
+        </table>
     </figure>
     <footer>
-        {#if !$watch}
-            <button disabled>Save</button>
-        {/if}
-        <button disabled class="error">Shutdown All</button>
     </footer>
 </article>
 <style>
     hgroup, header, figure {
         margin-bottom: 0;
     }
+
     footer {
         margin-top: 0;
     }

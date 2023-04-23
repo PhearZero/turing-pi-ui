@@ -21,6 +21,9 @@
 </article>
 
 <style>
+    article {
+        background-color: var(--background-color);
+    }
     hgroup,
     article {
         margin: 0;

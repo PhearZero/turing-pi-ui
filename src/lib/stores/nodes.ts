@@ -72,8 +72,10 @@ const mergeData = (d: any, type: string) => {
 
 }
 
-const update = () => {
+const update = (_server) => {
+    if(typeof _server.ip !== 'undefined' && typeof _server.usb !== 'undefined') {
     console.log(`Running update ${new Date()}`)
+
     client.get('nodeinfo')
         .then(d => {
             mergeData(d.response[0], 'info')
@@ -82,11 +84,9 @@ const update = () => {
         .then(d => {
             mergeData(d.response[0], 'power')
         })
-    client.get('usb')
-        .then(d => {
-            mergeData(d.response[0], "usb")
-        })
 
+        mergeData(_server.usb, "usb")
+    }
 }
 
 
@@ -95,7 +95,7 @@ let interval: unknown
 // Anytime the store changes, update the local storage value.
 server.subscribe((value) => {
     client = value.client
-    update()
+    update(value)
     if (typeof interval !== 'undefined') {
         clearInterval(interval as number)
         interval = undefined
