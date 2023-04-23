@@ -31,17 +31,20 @@ tar cf build.tar ./build/
 echo
 
 # Deploy and extract
-echo "Deploying bundle to $1"
-scp build.tar "$1:/mnt/var" &> deploy.remote.log
+echo "Upload bundle to $1"
+# credit to @srcshelton in Turing Pi Discord, tar to remote folder instead of sending the bundle
+tar -cf - ./build | ssh "$1" 'tar -xvf - -C /mnt/var' &> deploy.remote.log
 
 echo
 
-echo "Extracting bundle on $1"
-ssh "$1" "rm -rf /mnt/var/www && tar xvf /mnt/var/build.tar -C /mnt/var && mv /mnt/var/build /mnt/var/www && rm /mnt/var/build.tar" &>> deploy.remote.log
+now=$(date +%s)
+
+echo "Backing up service to '/mnt/sdcard/www-$now.tar' and deploying turing-pi-ui"
+# credit to @srcshelton in Turing Pi Discord, backup existing www directory to the sdcard
+ssh "$1" "[ -d /mnt/var/www ] && [ -d /mnt/sdcard ] && tar cf /mnt/sdcard/www-$now.tar -C /mnt/var/ www && rm -rf /mnt/var/www && mv /mnt/var/build /mnt/var/www" &>> deploy.remote.log
 
 echo
 
 echo "Cleaning up..."
 rm ./build.tar
-mv .env .env-production
 [ -f ".env-disabled" ] && mv .env-disabled .env
