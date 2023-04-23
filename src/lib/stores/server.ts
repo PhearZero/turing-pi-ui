@@ -1,8 +1,11 @@
+import { PUBLIC_SERVICE_API } from '$env/static/public'
 import {writable, get} from "svelte/store";
 import {tpi} from 'turing-pi-js'
 
-// const DEFAULT_SERVER = new URL(`${window.location.origin}/api/bmc`)
-const DEFAULT_SERVER = new URL(`http://localhost:8080/api/bmc`)
+const DEFAULT_SERVER = PUBLIC_SERVICE_API !== '' ?
+    new URL(`${PUBLIC_SERVICE_API}/api/bmc`) :
+    new URL(`${window.location.origin}/api/bmc`)
+
 interface USB {
     mode: 0|1
     node: number
