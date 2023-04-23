@@ -6,7 +6,6 @@
     let error
     const setUSB = (id) => {
         let _nodes = $nodes
-        console.log(_nodes)
         Object.keys(_nodes).forEach((n, i)=>{
             _nodes[n] = {
                 ..._nodes[n],
@@ -31,17 +30,17 @@
             "node3": 2,
             "node4": 3,
         }
-        $server.client.set('usb', {mode: $server.usb.mode, node: nodeMap[e.target.name]}, {mode: "no-cors"})
+        $server.client.set('usb', {mode: $server.usb.mode, node: nodeMap[e.target.value]}, {mode: "no-cors"})
             .then(() => {
-                setUSB(nodeMap[e.target.name])
+                setUSB(nodeMap[e.target.value])
                 loading = false
             })
             .catch(_error => {
-                if(_error.name === 'SyntaxError'){
+                if(_error.name !== 'SyntaxError'){
                     error = _error
                 }
                 setUSB(
-                    _error.name === 'SyntaxError' ? nodeMap[e.target.name] : $server.usb.node
+                    _error.name === 'SyntaxError' ? nodeMap[e.target.value] : $server.usb.node
                 )
                 loading = false
             })
@@ -76,15 +75,17 @@
                     <td>{$nodes[nodeName].name}</td>
                     <td>{$nodes[nodeName].info}</td>
                     <td>
+                        {#if typeof $server.usb !== 'undefined'}
+                            <input
+                                    on:change={handleUsbChange}
 
-                        <input
-                                on:change={handleUsbChange}
-                                disabled={$nodes[nodeName].usb}
-                                type="checkbox"
-                                role="switch"
-                                name={nodeName}
-                                bind:checked={$nodes[nodeName].usb}
-                        />
+                                    type="radio"
+                                    name="usb"
+                                    bind:value={nodeName}
+                                    checked={$server.usb.node === i}
+                            />
+                        {/if}
+
 
                     </td>
                     <td>
