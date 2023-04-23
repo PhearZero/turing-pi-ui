@@ -1,46 +1,72 @@
-# create-svelte
+# 💄 turing-pi-ui
+> Web Interface for a Turing Pi 2 BMC 
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
 
-## Creating a project
+## ℹ️ Overview
 
-If you're seeing this, you've probably already done this step. Congrats!
+### 📦 Prerequisites
+- [Node.js](https://nodejs.org/en)
+- [Turing Pi 2](https://turingpi.com/product/turing-pi-2/)
+
+This project was created by @PhearZero and is not affiliated with [Turing Machines](). `turing-pi-ui` is a simplifed
+interface with a heavy focus on optimizations (304kb bundle size). It leverages the [turing-pi-js](https://www.npmjs.com/package/turing-pi-js) 
+library, an API client for a Turing Pi 2 BMC.
+
+### 📝 Remaining Issues:
+ - [X] Power Management
+ - [X] USB Management
+ - [X] BMC Host Information
+ - [X] Node Information
+ - [ ] Allow firmware uploads 
+
+## 🚀 Quick Install
+
+Included is a deployment shell script that will upload the assets to the appropriate directory on the BMC
 
 ```bash
-# create a new project in the current directory
-npm create svelte@latest
+git clone https://github.com/PhearZero/turing-pi-ui
+cd turing-pi-ui
 
-# create a new project in my-app
-npm create svelte@latest my-app
+# Update the target to the BMC
+# ./deploy.sh <target>
+./deploy.sh root@192.168.1.X
 ```
 
-## Starting the Proxy
+## 👷 Developing
 
-Simple proxy to fix the headers of the BMC Web API
+### 🔃 Starting the Proxy
 
+Included is a simple proxy to fix the headers of the BMC Web API. Ensure that the BMC_API variable is pointing
+to a BMC api that is reachable.
+
+Add the following `.env` file:
+```dotenv
+# The location of the BMC API, used for proxy connections
+BMC_API=http://192.168.1.36
+
+# The location of the NGINX proxy, used for frontend connections in development
+PUBLIC_SERVICE_API=http://127.0.0.1:8080
+```
+
+Run docker services
 ```bash
 docker compose up
 ```
 
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+### ⚙️ Running UI Locally
 
 ```bash
-npm run dev
+# Install dependencies
+npm install
 
-# or start the server and open the app in a new browser tab
+# Start the server and open the app in a new browser tab
 npm run dev -- --open
 ```
 
-## Building
+### 🏗️ Building
 
-To create a production version of your app:
+To create a production version of the app:
 
 ```bash
 npm run build
 ```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
