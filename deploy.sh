@@ -40,6 +40,7 @@ now=$(date +%s)
 
 echo "Backing up service to '/mnt/sdcard/www-$now.tar' and deploying turing-pi-ui"
 # credit to @srcshelton in Turing Pi Discord, backup existing www directory to the sdcard
+# shellcheck disable=SC2029
 ssh "$1" "[ -d /mnt/var/www ] && [ -d /mnt/sdcard ] && tar cf /mnt/sdcard/www-$now.tar -C /mnt/var/ www && rm -rf /mnt/var/www && mv /mnt/var/build /mnt/var/www" &>> deploy.remote.log
 
 echo

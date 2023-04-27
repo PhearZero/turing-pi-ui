@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [16.x, 17.x, 18.x, 19.x]
+        node-version: [16.x, 18.x, 19.x]
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
@@ -22,6 +22,8 @@ jobs:
         run: npm ci
       - name: Playwright install
         run:  npx playwright install
+      - name: Copy ENV
+        run: cp .env-development .env
       - name: Test
         run: npm test
       - name: Check Shell Script
@@ -32,12 +34,15 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     steps:
-      - name: Use Node.js ${{ matrix.node-version }}
+      - uses: actions/checkout@v3
+      - name: Use Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18.x
       - name: Install
         run: npm ci
+      - name: Copy ENV
+        run: cp .env-production .env
       - name: Test
         run: npm run build
       - name: Update Index

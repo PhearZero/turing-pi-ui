@@ -1,6 +1,5 @@
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vitest/config';
-import { SvelteKitPWA } from '@vite-pwa/sveltekit'
 export default defineConfig({
 	//TODO: Enable PWA
 	plugins: [sveltekit(), /*SvelteKitPWA()*/],
