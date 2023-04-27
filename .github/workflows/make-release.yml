@@ -1,0 +1,53 @@
+name: zpi
+
+on:
+  pull_request:
+    branches: ["main"]
+  push:
+    tags:
+      - "v*.*.*"
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x, 17.x, 18.x, 19.x]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install
+        run: npm ci
+      - name: Playwright install
+        run:  npx playwright install
+      - name: Test
+        run: npm test
+      - name: Check Shell Script
+        run: shellcheck ./deploy.sh
+  release:
+    needs: test
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+      - name: Install
+        run: npm ci
+      - name: Test
+        run: npm run build
+      - name: Update Index
+        run: mv ./build/index.asp.html ./build/index.asp
+      - name: Tar
+        run: tar -cvf turing-pi-ui.tar.gz ./build
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          generate_release_notes: true
+          files: |
+            *.tar.gz
