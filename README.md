@@ -18,6 +18,7 @@ library, an API client for a Turing Pi 2 BMC.
  - [X] BMC Host Information
  - [X] BMC SD Card Information
  - [X] Node Information
+ - [X] UART TTY
  - [ ] Allow firmware uploads 
 
 ## 🚀 Quick Install
@@ -28,6 +29,7 @@ Included is a deployment shell script that will upload the assets to the appropr
 git clone https://github.com/PhearZero/turing-pi-ui
 cd turing-pi-ui
 
+npm install
 # Update the target to the BMC
 # ./deploy.sh <target>
 ./deploy.sh root@192.168.1.X
