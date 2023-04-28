@@ -36,6 +36,7 @@
   },
   "type": "module",
   "dependencies": {
-    "turing-pi-js": "^1.0.1"
+    "turing-pi-js": "^1.1.0",
+    "xterm": "^5.1.0"
   }
 }
