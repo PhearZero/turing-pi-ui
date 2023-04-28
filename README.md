@@ -18,6 +18,7 @@ library, an API client for a Turing Pi 2 BMC.
  - [X] BMC Host Information
  - [X] BMC SD Card Information
  - [X] Node Information
+ - [X] UART TTY
  - [ ] Allow firmware uploads 
 
 ## 🚀 Quick Install
