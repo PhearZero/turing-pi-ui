@@ -74,7 +74,6 @@ const createNodesStore = () => {
 			}
 
 			if (typeof _target.client !== 'undefined' && isNotUSBChange) {
-				console.log(`Server update, fetching nodes ${new Date()}`);
 				const info = FAKER
 					? {
 							response: [

@@ -23,16 +23,14 @@ export interface Server {
 let initialized = false;
 
 function createServerStore() {
-	console.log(`Creating server store ${new Date()}`);
 	const client = tpi(DEFAULT_SERVER);
 	const _server = writable<Server>({ url: DEFAULT_SERVER, client });
 	return {
 		..._server,
+		isFaked: FAKER,
 		async init() {
 			if (!initialized) {
-				console.log(`Running server init ${new Date()}`);
-
-				const other = FAKER ?
+					const other = FAKER ?
 						// Fake data for build previews
 						{response:[{ip:window.location.hostname, version: "X.X.X", buildtime: new Date(), mac: "FF:FF:FF:FF:FF"}]} :
 						await client.get('other');
@@ -74,8 +72,8 @@ function createServerStore() {
 		},
 		setUSB(query: USBQuery){
 			function _setServerUSB(_query: USBQuery){
-				server.set({
-					...get(server),
+				_server.set({
+					...get(_server),
 					usb: _query
 				});
 			}
@@ -95,11 +93,11 @@ function createServerStore() {
 					});
 		},
 		async getUART(query: UARTGetQuery){
-			return FAKER ? {response: [{uart: "Hello World!\r\n"}]} :
+			return FAKER ? {response: [{uart: ""}]} :
 				client.get('uart', query)
 		},
 		async setUART(query: UARTQuery){
-			return FAKER ? undefined : client.set('uart', query, {mode: 'no-cors'})
+			return FAKER ? console.debug('UART', query) : client.set('uart', query, {mode: 'no-cors'})
 		}
 	};
 }
