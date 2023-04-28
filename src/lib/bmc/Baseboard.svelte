@@ -5,8 +5,8 @@
 <article>
 	<header class="title-header">
 		<hgroup>
-			<h4>Server</h4>
-			<h5>Metadata for BMC Board</h5>
+			<h4>BMC</h4>
+			<h5>Baseboard Information</h5>
 		</hgroup>
 	</header>
 	<div class="grid">
