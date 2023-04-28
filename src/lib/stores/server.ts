@@ -66,9 +66,13 @@ function createServerStore() {
 				? console.debug('Node Power', query)
 				: client
 					.set('power', query, { mode: 'no-cors' })
-					.catch((_error) => {
-						console.log(_error);
-					});
+					.catch(e=>{
+						if(e.name === "SyntaxError"){
+							console.error('TODO: Fix BMC API HEADERS - BMC API returns text/plain, Recovering from error')
+						} else {
+							throw e;
+						}
+					})
 		},
 		setUSB(query: USBQuery){
 			function _setServerUSB(_query: USBQuery){
@@ -90,6 +94,12 @@ function createServerStore() {
 					)
 					.then(() => {
 						_setServerUSB(query)
+					}).catch(e=>{
+					if(e.name === "SyntaxError"){
+						console.error('TODO: Fix BMC API HEADERS - BMC API returns text/plain, Recovering from error')
+					} else {
+						throw e;
+					}
 					});
 		},
 		async getUART(query: UARTGetQuery){
