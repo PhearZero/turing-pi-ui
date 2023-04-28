@@ -1,6 +1,6 @@
 <script>
 	import Nodes from '$lib/bmc/Nodes.svelte';
-	import Server from '$lib/bmc/Server.svelte';
+	import Server from '$lib/bmc/Baseboard.svelte';
 	import USB from '$lib/bmc/USB.svelte';
 </script>
 
