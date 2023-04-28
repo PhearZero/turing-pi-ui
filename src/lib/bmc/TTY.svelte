@@ -11,7 +11,7 @@
 	let term;
 	let xterm;
 	let interval;
-	let poll = 2000;
+	let poll = 500;
 
 	// FAKING
 	let firstUART = true;
@@ -22,7 +22,7 @@
 		if($nodes[nodeName].power){
 			xterm.clear();
 			xterm.write('\x1b[2K\r');
-			if(!firstUART){
+			if(!firstUART && server.isFaked){
 				xterm.write(firstFakeMessage)
 			}
 		} else {
@@ -147,7 +147,7 @@
 		<input
 			on:change={handleIntervalChange}
 			type="range"
-			min="1000"
+			min="250"
 			max="20000"
 			id="range"
 			name="range"
