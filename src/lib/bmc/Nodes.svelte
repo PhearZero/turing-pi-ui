@@ -1,9 +1,14 @@
 <script>
     import {server} from '$lib/stores/server'
     import {nodes} from '$lib/stores/nodes'
+    import TTY from '$lib/bmc/TTY.svelte'
+
+    let selectedNode = "node1";
 
     let loading
     let error
+
+    let ttyOpen = false
     const setUSB = (id) => {
         let _nodes = $nodes
         Object.keys(_nodes).forEach((n, i)=>{
@@ -52,7 +57,9 @@
         })
     }
 </script>
+
 <article>
+
     <header>
         <hgroup>
             <h1>Nodes</h1>
@@ -67,6 +74,7 @@
                 <th scope="col">Info</th>
                 <th scope="col">USB 2.0</th>
                 <th scope="col">Power</th>
+                <th scope="col">TTY</th>
             </tr>
             </thead>
             <tbody>
@@ -104,6 +112,14 @@
                         />
 
                     </td>
+                    <td>
+
+                        <button on:click={()=>{
+                            selectedNode=nodeName
+                            ttyOpen = true
+                        }}>🖥️</button>
+
+                    </td>
                 </tr>
             {/each}
             </tbody>
@@ -112,6 +128,10 @@
     <footer>
     </footer>
 </article>
+{#if ttyOpen}
+    <TTY bind:open={ttyOpen} bind:nodeName={selectedNode}/>
+{/if}
+
 <style>
     hgroup, header, figure {
         margin-bottom: 0;
