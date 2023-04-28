@@ -4,15 +4,14 @@
     import Navigation from "../lib/Navigation.svelte";
     import Footer from "../lib/Footer.svelte";
 </script>
-<div class="app">
-    <Navigation/>
-    <main class="container-fluid">
-        <slot/>
-    </main>
-    <Footer/>
-</div>
+
+<Navigation/>
+<main class="container-fluid">
+    <slot/>
+</main>
+<Footer/>
 <style>
-    .app>main {
+    main {
         display: flex;
         flex-direction: column;
         justify-content: center;

@@ -7,6 +7,7 @@
         themeSwitcher.init()
     })
 </script>
+<header>
 <nav class="container-fluid">
     <ul>
         <li>
@@ -35,3 +36,10 @@
         </li>
     </ul>
 </nav>
+</header>
+
+<style>
+    header {
+        padding: 0;
+    }
+</style>
