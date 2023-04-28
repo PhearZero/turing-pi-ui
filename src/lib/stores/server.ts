@@ -1,7 +1,7 @@
 import { PUBLIC_SERVICE_API, PUBLIC_FAKE_API } from '$env/static/public';
-import { writable } from 'svelte/store';
+import { get, writable } from 'svelte/store';
 import { tpi } from 'turing-pi-js';
-import type {TuringPiInterface, USB, SDCard, Other} from 'turing-pi-js';
+import type {TuringPiInterface, USB, SDCard, Other, PowerQuery, USBQuery, UARTQuery, UARTGetQuery} from 'turing-pi-js';
 
 const FAKER = PUBLIC_FAKE_API === 'true'
 const DEFAULT_SERVER =
@@ -56,6 +56,50 @@ function createServerStore() {
 				});
 				initialized = true;
 			}
+		},
+		nodeMap: {
+			node1: 0,
+			node2: 1,
+			node3: 2,
+			node4: 3
+		},
+		setPower(query: PowerQuery){
+			FAKER
+				? console.debug('Node Power', query)
+				: client
+					.set('power', query, { mode: 'no-cors' })
+					.catch((_error) => {
+						console.log(_error);
+					});
+		},
+		setUSB(query: USBQuery){
+			function _setServerUSB(_query: USBQuery){
+				server.set({
+					...get(server),
+					usb: _query
+				});
+			}
+			FAKER
+				? (()=>{
+					console.debug('USB Device', {mode: query.mode, node: query.node})
+					_setServerUSB(query)
+				})()
+				: client
+					.set(
+						'usb',
+						query,
+						{ mode: 'no-cors' }
+					)
+					.then(() => {
+						_setServerUSB(query)
+					});
+		},
+		async getUART(query: UARTGetQuery){
+			return FAKER ? {response: [{uart: "Hello World!\r\n"}]} :
+				client.get('uart', query)
+		},
+		async setUART(query: UARTQuery){
+			return FAKER ? undefined : client.set('uart', query, {mode: 'no-cors'})
 		}
 	};
 }

@@ -13,11 +13,7 @@
 	let interval;
 	let poll = 2000;
 	const handlePowerChange = (e) => {
-		$server.client
-			.set('power', { [e.target.name]: e.target.checked ? 1 : 0 }, { mode: 'no-cors' })
-			.catch((_error) => {
-				console.log(_error);
-			});
+		server.setPower({ [e.target.name]: e.target.checked ? 1 : 0 })
 	};
 	const handleClose = () => {
 		open = false;
@@ -28,19 +24,10 @@
 		}
 	};
 
-	const nodeMap = {
-		node1: 0,
-		node2: 1,
-		node3: 2,
-		node4: 3
-	};
-
 	let cmd = '';
 	onMount(() => {
-		console.log('Mounting', open);
 		interval = setInterval(() => {
-			console.log('interval');
-			$server.client.get('uart', { node: nodeMap[nodeName] }).then((r) => {
+			server.getUART({ node: server.nodeMap[nodeName] }).then((r) => {
 				xterm.write(r.response[0].uart);
 			});
 		}, poll);
@@ -53,17 +40,21 @@
 		xterm.focus();
 		xterm.onKey(function ({ key }) {
 			const code = key.charCodeAt(0);
+			// On Backspace
 			if (code === 127) {
-				//Backspace
 				xterm.write('\b \b');
 				cmd = cmd.substring(0, cmd.length - 1);
-			} else if (key === '\r') {
-				$server.client.set('uart', { node: nodeMap[nodeName], cmd: cmd }, { mode: 'no-cors' });
+			}
+			// On enter
+			else if (key === '\r') {
+				server.setUART({ node: server.nodeMap[nodeName], cmd: cmd });
 				for (let i = 0; i < cmd.length; i++) {
 					xterm.write('\b \b');
 				}
 				cmd = '';
-			} else {
+			}
+			// Normal Keys
+			else {
 				xterm.write(key);
 				cmd += key;
 			}

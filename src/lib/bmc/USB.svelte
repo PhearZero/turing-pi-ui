@@ -1,30 +1,7 @@
 <script>
 	import { server } from '$lib/stores/server';
-
-	let loading;
-	let error;
-	const setUSB = (mode) => {
-		server.set({
-			...$server,
-			usb: {
-				...$server.usb,
-				mode
-			}
-		});
-	};
 	const onChange = async (e) => {
-		loading = true;
-		$server.client
-			.set('usb', { mode: e.target.value, node: $server.usb.node }, { mode: 'no-cors' })
-			.then(() => {
-				setUSB(parseInt(e.target.value));
-				loading = false;
-			})
-			.catch((e) => {
-				error = e;
-				setUSB($server.usb.mode);
-				loading = false;
-			});
+		server.setUSB({ mode: parseInt(e.target.value), node: $server.usb.node })
 	};
 </script>
 

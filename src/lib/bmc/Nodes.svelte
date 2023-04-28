@@ -5,58 +5,14 @@
 
 	let selectedNode = 'node1';
 
-	let loading;
-	let error;
-
 	let ttyOpen = false;
-	const setUSB = (id) => {
-		let _nodes = $nodes;
-		Object.keys(_nodes).forEach((n, i) => {
-			_nodes[n] = {
-				..._nodes[n],
-				usb: i === id
-			};
-		});
-		server.set({
-			...$server,
-			usb: {
-				...$server.usb,
-				node: id
-			}
-		});
-		nodes.set(_nodes);
-	};
 	const handleUsbChange = async (e) => {
-		loading = true;
-		// get the previous state, in case of it changing or to revert to it during failure
-		const nodeMap = {
-			node1: 0,
-			node2: 1,
-			node3: 2,
-			node4: 3
-		};
-		$server.client
-			.set('usb', { mode: $server.usb.mode, node: nodeMap[e.target.value] }, { mode: 'no-cors' })
-			.then(() => {
-				setUSB(nodeMap[e.target.value]);
-				loading = false;
-			})
-			.catch((_error) => {
-				if (_error.name !== 'SyntaxError') {
-					error = _error;
-				}
-				setUSB(_error.name === 'SyntaxError' ? nodeMap[e.target.value] : $server.usb.node);
-				loading = false;
-			});
+		server.setUSB({ mode: $server.usb.mode, node: server.nodeMap[e.target.value]})
 	};
 	const handlePowerChange = (e) => {
-		loading = true;
-		$server.client
-			.set('power', { [e.target.name]: e.target.checked ? 1 : 0 }, { mode: 'no-cors' })
-			.catch((_error) => {
-				console.log(_error);
-			});
+		server.setPower( { [e.target.name]: e.target.checked ? 1 : 0 })
 	};
+
 </script>
 
 <article>
@@ -118,7 +74,7 @@
 			</tbody>
 		</table>
 	</figure>
-	<footer ></footer>
+	<footer></footer>
 </article>
 {#if ttyOpen}
 	<TTY bind:open={ttyOpen} bind:nodeName={selectedNode} />

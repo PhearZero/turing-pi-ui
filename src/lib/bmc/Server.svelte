@@ -27,51 +27,28 @@
 		BMC Firmware Date
 		<input readonly value={$server.buildtime} />
 	</label>
-	{#if typeof $server.sdcard !== 'undefined'}
-		<article class="sdcard">
-			<header class="upload-header">
-				<hgroup>
-					<h5>SD Card</h5>
-					<h6>Storage Information</h6>
-				</hgroup>
 
-				<label>
-					Total
-					<input readonly value={$server.sdcard.total} />
-				</label>
-				<label>
-					Free
-					<input readonly value={$server.sdcard.free} />
-				</label>
-				<label>
-					Used
-					<input readonly value={$server.sdcard.use} />
-				</label>
-			</header>
-		</article>
-	{:else}
-		<article class="sdcard">
-			<header class="upload-header">
-				<hgroup>
-					<h5>SD Card</h5>
-					<h6>Storage Information</h6>
-				</hgroup>
+	<article class="sdcard">
+		<header class="upload-header">
+			<hgroup>
+				<h5>SD Card</h5>
+				<h6>Storage Information</h6>
+			</hgroup>
 
-				<label>
-					Total
-					<input readonly value="0" />
-				</label>
-				<label>
-					Free
-					<input readonly value="0" />
-				</label>
-				<label>
-					Used
-					<input readonly value="0" />
-				</label>
-			</header>
-		</article>
-	{/if}
+			<label>
+				Total
+				<input readonly value={$server.sdcard.total} />
+			</label>
+			<label>
+				Free
+				<input readonly value={$server.sdcard.free} />
+			</label>
+			<label>
+				Used
+				<input readonly value={$server.sdcard.use} />
+			</label>
+		</header>
+	</article>
 	<article class="upload-card">
 		<header class="upload-header">
 			<form action="/action_page.php" disabled>
