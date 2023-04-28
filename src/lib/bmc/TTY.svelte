@@ -93,7 +93,7 @@
 				server.setUART({ node: server.nodeMap[nodeName], cmd: cmd });
 				if(server.isFaked){
 					xterm.write(`${key}\n`)
-					xterm.write(server.firstFakeMessage)
+					xterm.write(firstFakeMessage)
 					xterm.focus()
 				} else {
 					for (let i = 0; i < cmd.length; i++) {
