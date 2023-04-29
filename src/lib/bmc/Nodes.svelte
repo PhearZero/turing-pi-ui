@@ -1,7 +1,7 @@
 <script>
 	import { server } from '$lib/stores/server';
 	import { nodes } from '$lib/stores/nodes';
-	import TTY from '$lib/bmc/TTY.svelte';
+	import TTY from '$lib/bmc/UART.svelte';
 
 	let selectedNode = 'node1';
 
@@ -30,7 +30,7 @@
 					<th scope="col">Info</th>
 					<th scope="col">USB OTG</th>
 					<th scope="col">Power</th>
-					<th scope="col">TTY</th>
+					<th scope="col">UART</th>
 				</tr>
 			</thead>
 			<tbody>
