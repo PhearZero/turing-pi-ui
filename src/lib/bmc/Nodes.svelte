@@ -28,7 +28,7 @@
 				<tr>
 					<th scope="col">Name</th>
 					<th scope="col">Info</th>
-					<th scope="col">USB 2.0</th>
+					<th scope="col">USB OTG</th>
 					<th scope="col">Power</th>
 					<th scope="col">TTY</th>
 				</tr>
